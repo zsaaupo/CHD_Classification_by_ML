@@ -1,0 +1,8 @@
+Django>=5.0,<6.0
+# The saved model/scaler were created with scikit-learn 1.6.1.
+# Python 3.14 needs a newer scikit-learn wheel.
+scikit-learn==1.6.1; python_version < "3.14"
+scikit-learn>=1.9,<2.0; python_version >= "3.14"
+joblib==1.5.3
+pandas>=2.0
+numpy>=1.26

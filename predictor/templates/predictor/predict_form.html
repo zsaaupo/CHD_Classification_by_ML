@@ -1,0 +1,104 @@
+{% extends 'predictor/base.html' %}
+
+{% block title %}New Prediction · CHD Classifier{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header text-center">
+        <div class="page-eyebrow mb-1">New Prediction</div>
+        <h1 class="h2 mb-1">Predict Heart Disease</h1>
+        <p class="text-soft mb-0">Enter the patient's clinical intake data below.</p>
+    </div>
+
+    <div class="panel form-card p-4 p-md-5 mb-5">
+        <form method="post" novalidate>
+            {% csrf_token %}
+
+            <div class="form-section-title">Demographics</div>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label" for="{{ form.gender.id_for_label }}">{{ form.gender.label }}</label>
+                    {{ form.gender }}
+                    {{ form.gender.errors }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="{{ form.age_months.id_for_label }}">{{ form.age_months.label }}</label>
+                    {{ form.age_months }}
+                    {{ form.age_months.errors }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="{{ form.weight_kg.id_for_label }}">Weight (KG)</label>
+                    {{ form.weight_kg }}
+                    {{ form.weight_kg.errors }}
+                </div>
+            </div>
+
+            <div class="form-section-title">Vitals</div>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label" for="{{ form.height_cm.id_for_label }}">{{ form.height_cm.label }}</label>
+                    {{ form.height_cm }}
+                    {{ form.height_cm.errors }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="{{ form.heart_rate.id_for_label }}">{{ form.heart_rate.label }}</label>
+                    {{ form.heart_rate }}
+                    {{ form.heart_rate.errors }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="{{ form.oxygen_saturation.id_for_label }}">{{ form.oxygen_saturation.label }}</label>
+                    {{ form.oxygen_saturation }}
+                    {{ form.oxygen_saturation.errors }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="{{ form.systolic_bp.id_for_label }}">{{ form.systolic_bp.label }}</label>
+                    {{ form.systolic_bp }}
+                    {{ form.systolic_bp.errors }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="{{ form.diastolic_bp.id_for_label }}">{{ form.diastolic_bp.label }}</label>
+                    {{ form.diastolic_bp }}
+                    {{ form.diastolic_bp.errors }}
+                </div>
+            </div>
+
+            <div class="form-section-title">Symptoms</div>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label" for="{{ form.primary_symptom.id_for_label }}">{{ form.primary_symptom.label }}</label>
+                    {{ form.primary_symptom }}
+                    {{ form.primary_symptom.errors }}
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label" for="{{ form.secondary_symptoms.id_for_label }}">{{ form.secondary_symptoms.label }}</label>
+                    {{ form.secondary_symptoms }}
+                    {{ form.secondary_symptoms.errors }}
+                </div>
+            </div>
+
+            <div class="form-section-title">Cardiac Murmur</div>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label" for="{{ form.murmur_type.id_for_label }}">{{ form.murmur_type.label }}</label>
+                    {{ form.murmur_type }}
+                    {{ form.murmur_type.errors }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="{{ form.murmur_grade.id_for_label }}">{{ form.murmur_grade.label }}</label>
+                    {{ form.murmur_grade }}
+                    {{ form.murmur_grade.errors }}
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label" for="{{ form.murmur_zone.id_for_label }}">{{ form.murmur_zone.label }}</label>
+                    {{ form.murmur_zone }}
+                    {{ form.murmur_zone.errors }}
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary-app text-white w-100 mt-4">
+                <i class="bi bi-heart-pulse me-1"></i>Get Prediction
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,3 @@
+# Install these ON TOP OF requirements.txt only if you want to re-run
+# training/train_lr.py to regenerate the model artifacts.
+imbalanced-learn>=0.12

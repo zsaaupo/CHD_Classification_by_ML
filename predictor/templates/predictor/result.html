@@ -1,0 +1,97 @@
+{% extends 'predictor/base.html' %}
+
+{% block title %}Prediction Result · CHD Classifier{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="mx-auto" style="max-width: 780px;">
+
+        {% if is_history %}
+        <div class="page-eyebrow text-center mb-2">Viewing Past Result &middot; #{{ record.id }}</div>
+        {% else %}
+        <div class="page-eyebrow text-center mb-2">Prediction Result</div>
+        {% endif %}
+
+        <!-- Large color-coded result card -->
+        <div class="result-hero result-{{ record.predicted_class|lower }} text-center mb-4">
+            <div class="result-label">Predicted Class</div>
+            <div class="result-class">{{ record.predicted_class }}</div>
+            <div class="result-confidence">{{ record.get_predicted_class_display }}</div>
+            <div class="mt-3">
+                <span class="badge bg-light text-dark px-3 py-2" style="border-radius: 999px; font-size: .95rem;">
+                    <i class="bi bi-bullseye me-1"></i>{{ record.confidence_pct }}% confidence
+                </span>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-12">
+                <div class="panel p-3 h-100">
+                    <h2 class="h6 mb-2">Probability Breakdown</h2>
+                    <canvas id="probChart" height="110"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="recommendation-box mb-4">
+            <h2 class="h6 mb-2"><i class="bi bi-clipboard2-heart me-1"></i>Recommendation</h2>
+            <p class="mb-0 text-soft">{{ record.recommendation }}</p>
+        </div>
+
+        <div class="panel p-4 mb-5">
+            <h2 class="h6 mb-3">Submitted Clinical Data</h2>
+            <div class="row row-cols-2 row-cols-md-3 g-3 small">
+                <div><span class="text-soft d-block">Gender</span>{{ record.get_gender_display }}</div>
+                <div><span class="text-soft d-block">Age (months)</span>{{ record.age_months|floatformat:1 }}</div>
+                <div><span class="text-soft d-block">Weight (KG)</span>{{ record.weight_kg|floatformat:1 }}</div>
+                <div><span class="text-soft d-block">Height (CM)</span>{{ record.height_cm|floatformat:1 }}</div>
+                <div><span class="text-soft d-block">Heart Rate</span>{{ record.heart_rate|floatformat:0 }} bpm</div>
+                <div><span class="text-soft d-block">O2 Saturation</span>{{ record.oxygen_saturation|floatformat:0 }}%</div>
+                <div><span class="text-soft d-block">Systolic BP</span>{{ record.systolic_bp|floatformat:0 }}</div>
+                <div><span class="text-soft d-block">Diastolic BP</span>{{ record.diastolic_bp|floatformat:0 }}</div>
+                <div><span class="text-soft d-block">Primary Symptom</span>{{ record.primary_symptom }}</div>
+                <div><span class="text-soft d-block">Secondary Symptoms</span>{{ record.secondary_symptoms }}</div>
+                <div><span class="text-soft d-block">Murmur Type</span>{{ record.murmur_type }}</div>
+                <div><span class="text-soft d-block">Murmur Grade</span>{{ record.murmur_grade }}</div>
+                <div><span class="text-soft d-block">Murmur Zone</span>{{ record.murmur_zone }}</div>
+                <div><span class="text-soft d-block">Recorded</span>{{ record.created_at|date:"M d, Y H:i" }}</div>
+            </div>
+        </div>
+
+        <div class="d-flex flex-column flex-sm-row gap-2 justify-content-center mb-5">
+            <a href="{% url 'predictor:predict_form' %}" class="btn btn-primary-app text-white px-4">
+                <i class="bi bi-arrow-repeat me-1"></i>Predict Again
+            </a>
+            <a href="{% url 'predictor:dashboard' %}" class="btn btn-outline-secondary px-4">
+                <i class="bi bi-grid-1x2 me-1"></i>Go to Dashboard
+            </a>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+const probColors = { ASD: '#14919B', PDA: '#D9822B', VSD: '#1D5B8F' };
+const labels = {{ chart_labels|safe }};
+new Chart(document.getElementById('probChart'), {
+    type: 'bar',
+    data: {
+        labels: labels,
+        datasets: [{
+            data: {{ chart_data|safe }},
+            backgroundColor: labels.map(l => probColors[l] || '#1D5B8F'),
+            borderRadius: 8,
+            maxBarThickness: 40
+        }]
+    },
+    options: {
+        indexAxis: 'y',
+        plugins: { legend: { display: false },
+            tooltip: { callbacks: { label: (ctx) => ctx.parsed.x + '%' } } },
+        scales: { x: { beginAtZero: true, max: 100, ticks: { callback: (v) => v + '%' } } }
+    }
+});
+</script>
+{% endblock %}
